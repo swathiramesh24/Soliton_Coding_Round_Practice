@@ -1,54 +1,59 @@
 #include <stdio.h>
 #include<string.h>
 
-void convert(char* input)
+void scientificNotation(char input[])
 {
-    char base[10000];
-    int i=0,j=0;
+    char base[1000];
+    int i=0, j=0;
+    
     while(input[i]!='e' && input[i]!='E')
     {
-        base[j++]=input[i++];
+        base[j++] = input[i++];
     }
     base[j]='\0';
     i++;
     
     int sign=1;
+    int expo=0;
+    
     if(input[i]=='-')
     {
-        sign = -1;
+        sign= -1;
         i++;
     }
     else if(input[i]=='+')
     {
+        sign=1;
         i++;
     }
     
-    int expo =0;
     while(input[i]!='\0')
     {
-        expo = expo*10 + (input[i] - '0');
+        expo = expo*10 + (input[i]-'0');
         i++;
     }
-    expo *= sign;
     
-    int decimalIndex = -1;
+    expo = expo*sign;
+    
+    int decimalIdx = -1;
     int len = strlen(base);
     for(int k=0;k<len;k++)
     {
         if(base[k]=='.')
         {
-            decimalIndex = k;
+            decimalIdx=k;
             break;
         }
     }
     
-    if(decimalIndex==-1)
+    if(decimalIdx== -1)
     {
-        decimalIndex=len;
+        decimalIdx=len;
     }
     
-    char digits[10000];
-    int index = 0;
+    char digits[1000];
+    int index=0;
+    
     for(int k=0;k<len;k++)
     {
         if(base[k]!='.')
@@ -56,35 +61,34 @@ void convert(char* input)
             digits[index++] = base[k];
         }
     }
-    digits[index]='\0';
-    int digits_len = strlen(digits);
-    int new_pos = expo+decimalIndex;
+    digits[index] = '\0';
     
-    printf("Output\n");
-    if(new_pos>=digits_len)
+    int digit_len = strlen(digits);
+    int new_pos = decimalIdx + expo;
+    
+    if(new_pos>=digit_len)
     {
         printf("%s", digits);
-        for(int k=0;k<new_pos- digits_len;k++)
+        for(int k=0;k<new_pos-digit_len;k++)
         {
             printf("0");
         }
     }
     else if(new_pos>0)
     {
-        for(int k=0;k<new_pos;k++)
+        for(int k=0;k<digit_len;k++)
         {
-            printf("%c", digits[k]);
-            printf(".");
-        }
-        for(int k=new_pos;k<digits_len;k++)
-        {
+            if(k==new_pos)
+            {
+                printf('.');
+            }
             printf("%c", digits[k]);
         }
     }
     else
     {
-        printf("0. ");
-        for(int k=0;k< (-1*new_pos);k++)
+        printf("0.");
+        for(int k=0;k<(-new_pos);k++)
         {
             printf("0");
         }
@@ -93,7 +97,10 @@ void convert(char* input)
 }
 
 int main() {
-	convert("1.23e5");
+	char input[1000];
+	scanf("%s", input);
+	
+	scientificNotation(input);
 
 }
 
